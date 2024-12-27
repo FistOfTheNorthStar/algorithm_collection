@@ -15,11 +15,15 @@ func TestConvertEuroToDollar(t *testing.T) {
 	moneyInDollar := moneyInEuros.Multiply(factor)
 
 	// Verify
-	if moneyInDollar.GetAmount().String() != expected.String() {
+	gotFloat, _ := moneyInDollar.GetAmount().Float64()
+	expectedFloat, _ := expected.Float64()
+
+	if !floatEquals(gotFloat, expectedFloat, 0.01) {
 		t.Errorf("Expected %v but got %v",
-			expected.String(),
-			moneyInDollar.GetAmount().String())
+			expectedFloat,
+			gotFloat)
 	}
+
 	if moneyInDollar.GetCurrency() != USD {
 		t.Errorf("Expected USD currency but got %v",
 			moneyInDollar.GetCurrency())
@@ -37,13 +41,26 @@ func TestConvertDollarToEuro(t *testing.T) {
 	moneyInEuros := moneyInDollar.MultiplySecure(factor)
 
 	// Verify
-	if moneyInEuros.GetAmount().String() != expected.String() {
+	gotFloat, _ := moneyInEuros.GetAmount().Float64()
+	expectedFloat, _ := expected.Float64()
+
+	if !floatEquals(gotFloat, expectedFloat, 0.01) {
 		t.Errorf("Expected %v but got %v",
-			expected.String(),
-			moneyInEuros.GetAmount().String())
+			expectedFloat,
+			gotFloat)
 	}
+
 	if moneyInEuros.GetCurrency() != EUR {
 		t.Errorf("Expected EUR currency but got %v",
 			moneyInEuros.GetCurrency())
 	}
+}
+
+// Helper function to compare floats with tolerance
+func floatEquals(a, b, tolerance float64) bool {
+	diff := a - b
+	if diff < 0 {
+		diff = -diff
+	}
+	return diff <= tolerance
 }

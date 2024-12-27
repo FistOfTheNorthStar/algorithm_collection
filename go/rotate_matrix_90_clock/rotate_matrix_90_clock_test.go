@@ -47,7 +47,7 @@ func TestRotateMat90Clock(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Rotate(tt.matrix)
+			RotateMat90Clock(tt.matrix)
 			if !reflect.DeepEqual(tt.matrix, tt.want) {
 				t.Errorf("Rotate() = %v, want %v", tt.matrix, tt.want)
 			}
